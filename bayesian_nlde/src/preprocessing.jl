@@ -51,18 +51,22 @@ end
 
 function import_data(drop_threshold = 100; download_data = false)
 
+    confirmed_fn = string(@__DIR__) * "/data/raw/time_series_covid19_confirmed_global.csv"
+    deaths_fn = string(@__DIR__) * "/data/raw/time_series_covid19_deaths_global.csv"
+    recovered_fn = string(@__DIR__) * "/data/raw/time_series_covid19_recovered_global.csv"
+
     if download_data
         download("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv",
-            string(@__DIR__) * "/data/raw/time_series_covid19_confirmed_global.csv")
+            confirmed_fn)
         download("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv",
-            string(@__DIR__) * "/data/raw/time_series_covid19_deaths_global.csv")
+            deaths_fn)
         download("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv",
-            string(@__DIR__) * "/data/raw/time_series_covid19_recovered_global.csv")
+            recovered_fn)
     end
 
-    hopkins_case_dat = import_hopkins_data("time_series_covid19_confirmed_global.csv", "confirmed_cases")
-    hopkins_death_dat = import_hopkins_data("time_series_covid19_deaths_global.csv", "deaths")
-    hopkins_recov_dat = import_hopkins_data("time_series_covid19_recovered_global.csv", "recovered")
+    hopkins_case_dat = import_hopkins_data(confirmed_fn, "confirmed_cases")
+    hopkins_death_dat = import_hopkins_data(deaths_fn, "deaths")
+    hopkins_recov_dat = import_hopkins_data(recovered_fn, "recovered")
 
     hopkins_dat = @pipe (join(hopkins_case_dat, hopkins_recov_dat, on = [:date, :Country_Region]) |>
         join(_, hopkins_death_dat, on = [:date, :Country_Region]))
@@ -72,6 +76,7 @@ function import_data(drop_threshold = 100; download_data = false)
         groupby(_, :countriesAndTerritories) |>
         map(df -> (countriesAndTerritories = df.countriesAndTerritories[1], popData2018 = df.popData2018[1]), _) |>
         DataFrame(_))
+
     replace!(edcd_dat.countriesAndTerritories, "United_States_of_America" => "US")
 
     hopkins_ecdc = join(hopkins_dat, edcd_dat, on = [:Country_Region => :countriesAndTerritories])
