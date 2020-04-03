@@ -738,6 +738,11 @@ git-tree-sha1 = "75d07cb840c300084634b4991761886d0d762724"
 uuid = "69de0a69-1ddd-5017-9359-2bf0b02dc9f0"
 version = "1.0.1"
 
+[[Pipe]]
+git-tree-sha1 = "f11840ebaf295b39319c2750f158621a96173fc5"
+uuid = "b98c9c47-44ae-5843-9183-064241ee97a0"
+version = "1.2.0"
+
 [[Pkg]]
 deps = ["Dates", "LibGit2", "Libdl", "Logging", "Markdown", "Printf", "REPL", "Random", "SHA", "Test", "UUIDs"]
 uuid = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
