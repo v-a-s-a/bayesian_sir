@@ -11,7 +11,7 @@ module bayesian_nlde
     using Statistics
     using Plots.PlotMeasures
     using Pipe
-    using NamedTupleTools
+    import NamedTupleTools.namedtuple
 
     include("preprocessing.jl");
     include("modeling.jl");

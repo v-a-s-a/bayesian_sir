@@ -2,7 +2,7 @@
 
 function import_edcd_data(filepath = "", url = "https://opendata.ecdc.europa.eu/covid19/casedistribution/csv")
     if filepath == "" && startswith(url, "https://")
-        filepath = string(@__DIR__) * "/data/raw/latest_edcd_covid.csv" 
+        filepath = string(dirname(@__DIR__)) * "/data/raw/latest_edcd_covid.csv" 
         download(url, filepath)
     end
 
@@ -51,9 +51,9 @@ end
 
 function import_data(drop_threshold = 100; download_data = false)
 
-    confirmed_fn = string(@__DIR__) * "/data/raw/time_series_covid19_confirmed_global.csv"
-    deaths_fn = string(@__DIR__) * "/data/raw/time_series_covid19_deaths_global.csv"
-    recovered_fn = string(@__DIR__) * "/data/raw/time_series_covid19_recovered_global.csv"
+    confirmed_fn = string(dirname(@__DIR__)) * "/data/raw/time_series_covid19_confirmed_global.csv"
+    deaths_fn = string(dirname(@__DIR__)) * "/data/raw/time_series_covid19_deaths_global.csv"
+    recovered_fn = string(dirname(@__DIR__)) * "/data/raw/time_series_covid19_recovered_global.csv"
 
     if download_data
         download("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv",

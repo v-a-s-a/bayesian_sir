@@ -8,7 +8,7 @@ sir_ode = @ode_def SIRModel begin
     dR = γ * I
     end β γ
 
-@model hierarchical_sir_model(grouped_sir, m_countries, country_pops) = begin
+@model hierarchical_sir_model(grouped_sir, m_countries, country_pops, tspan = [0.0, 365.0]) = begin
 
     # hierarchical priors across countries
     #   locations
@@ -32,8 +32,12 @@ sir_ode = @ode_def SIRModel begin
 
     # likelihood
     for j = 1:m_countries
+
         timepoints = size(grouped_sir[j], 2)
         init = [(country_pops[j] - 100.0) / country_pops[j], 100.0 / country_pops[j], 0.0]
+        t = collect(range(0.0, 365.0, length=100))
+
+        sir_prob = ODEProblem(sir_ode, init, tspan)
         sol = concrete_solve(sir_prob, Tsit5(), init, [β[j], γ[j]]; saveat = 1:timepoints)
 
         if size(sol, 2) < timepoints
