@@ -49,9 +49,9 @@ version = "0.4.0"
 
 [[Arpack_jll]]
 deps = ["Libdl", "OpenBLAS_jll", "Pkg"]
-git-tree-sha1 = "68a90a692ddc0eb72d69a6993ca26e2a923bf195"
+git-tree-sha1 = "e214a9b9bd1b4e1b4f15b22c0994862b66af7ff7"
 uuid = "68821587-b530-5797-8361-c406ea357684"
-version = "3.5.0+2"
+version = "3.5.0+3"
 
 [[ArrayInterface]]
 deps = ["LinearAlgebra", "Requires", "SparseArrays"]
@@ -842,9 +842,9 @@ version = "0.7.0"
 
 [[RecursiveArrayTools]]
 deps = ["ArrayInterface", "RecipesBase", "Requires", "StaticArrays", "Statistics", "ZygoteRules"]
-git-tree-sha1 = "bd13db2a3561fb3a3635220c5ee21e3356d7631e"
+git-tree-sha1 = "b5797350f4935882324b32cf966b3e19805de565"
 uuid = "731186ca-8d62-57ce-b412-fbd966d074cd"
-version = "2.1.0"
+version = "2.1.2"
 
 [[RecursiveFactorization]]
 deps = ["LinearAlgebra"]
