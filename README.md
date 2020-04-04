@@ -1,4 +1,4 @@
-# Bayesian estimates for non-linear differential equation solutions
+# Bayesian parameter estimates for non-linear systems of differential equations
 
 **Please note, the following work is for educational purposes only! If you'd like to draw valid inferences, please consult an infectious disease epidemiologist. Modeling the outbreak is [hard](https://fivethirtyeight.com/features/why-its-so-freaking-hard-to-make-a-good-covid-19-model/), and this data must be used [responsibly](https://medium.com/nightingale/ten-considerations-before-you-create-another-chart-about-covid-19-27d3bd691be8) (thanks to [@simonw](https://github.com/simonw/covid-19-datasette/blob/master/README.md) for raising these points).**
 
