@@ -1,8 +1,8 @@
 # Bayesian parameter estimates for non-linear systems of differential equations
 
-**Please note, the following work is for educational purposes only! If you'd like to draw valid inferences, please consult an infectious disease epidemiologist. Modeling the outbreak is [hard](https://fivethirtyeight.com/features/why-its-so-freaking-hard-to-make-a-good-covid-19-model/), and this data must be used [responsibly](https://medium.com/nightingale/ten-considerations-before-you-create-another-chart-about-covid-19-27d3bd691be8) (thanks to [@simonw](https://github.com/simonw/covid-19-datasette/blob/master/README.md) for raising these points).**
+**Please note, the following work is for educational purposes only. If you'd like to draw valid inferences, please consult an infectious disease epidemiologist. Modeling the outbreak is [hard](https://fivethirtyeight.com/features/why-its-so-freaking-hard-to-make-a-good-covid-19-model/), and this data must be used [responsibly](https://medium.com/nightingale/ten-considerations-before-you-create-another-chart-about-covid-19-27d3bd691be8) (thanks to [@simonw](https://github.com/simonw/covid-19-datasette/blob/master/README.md) for raising these points).**
 
-This was inspired by Thomas Wiecki's [work](https://github.com/twiecki/covid19) on fitting models to the COVID data, as well as the elegant [`DiffEqBayes.jl`](https://github.com/JuliaDiffEq/DiffEqBayes.jl).
+This was inspired by Thomas Wiecki's [work](https://github.com/twiecki/covid19) on fitting PyMC3 models to the COVID data, as well as the elegant [`DiffEqBayes.jl`](https://github.com/JuliaDiffEq/DiffEqBayes.jl) package.
 
 ## Data
 
