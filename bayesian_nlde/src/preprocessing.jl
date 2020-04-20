@@ -37,12 +37,12 @@ function import_hopkins_data(filepath, value_col_name)
     end
 
     dat = @pipe (DataFrame(CSV.File(filepath)) |>
-        stack(_, 5:size(_)[2]) |>
+        DataFrames.stack(_, 5:size(_)[2]) |>
         rename(_, Dict( "Country/Region" => "Country_Region",
             "Province/State" => "Province_State",
             "variable" => "date",
             "value" => value_col_name)) |>
-            groupby(_, [:Country_Region, :date]) |>
+            groupby(_, [:Country_Region, :Province_State, :date]) |>
             map(aggregate_across_regions, _) |>
             DataFrame(_))
     return dat
@@ -68,28 +68,30 @@ function import_data(drop_threshold = 100; download_data = false)
     hopkins_death_dat = import_hopkins_data(deaths_fn, "deaths")
     hopkins_recov_dat = import_hopkins_data(recovered_fn, "recovered")
 
-    hopkins_dat = @pipe (join(hopkins_case_dat, hopkins_recov_dat, on = [:date, :Country_Region]) |>
-        join(_, hopkins_death_dat, on = [:date, :Country_Region]))
+    hopkins_dat = @pipe (join(hopkins_case_dat, hopkins_recov_dat, on = [:date, :Province_State, :Country_Region]) |>
+        join(_, hopkins_death_dat, on = [:date, :Province_State, :Country_Region]))
 
-    edcd_dat = @pipe(import_edcd_data() |>
-        select(_, :countriesAndTerritories, :popData2018) |>
-        groupby(_, :countriesAndTerritories) |>
-        map(df -> (countriesAndTerritories = df.countriesAndTerritories[1], popData2018 = df.popData2018[1]), _) |>
-        DataFrame(_))
+    # edcd_dat = @pipe(import_edcd_data() |>
+    #     select(_, :countriesAndTerritories, :popData2018) |>
+    #     groupby(_, :countriesAndTerritories) |>
+    #     map(df -> (countriesAndTerritories = df.countriesAndTerritories[1], popData2018 = df.popData2018[1]), _) |>
+    #     DataFrame(_))
+    # replace!(edcd_dat.countriesAndTerritories, "United_States_of_America" => "US")
 
-    replace!(edcd_dat.countriesAndTerritories, "United_States_of_America" => "US")
+    pop_dat_fn = string(dirname(@__DIR__)) * "/data/raw/wikidata_region_populations.csv"
+    pop_dat = DataFrame(CSV.File(pop_dat_fn))
 
-    hopkins_ecdc = join(hopkins_dat, edcd_dat, on = [:Country_Region => :countriesAndTerritories])
+    hopkins_wikidata = join(hopkins_dat, pop_dat, on = [:Province_State, :Country_Region])
 
     # drop observations bewlow 100 cases
-    filter!(row -> row.confirmed_cases > drop_threshold, hopkins_ecdc);
+    filter!(row -> row.confirmed_cases > drop_threshold, hopkins_wikidata);
 
     function add_SIR_time(df)
-        case_prop = df.confirmed_cases ./ df.popData2018
-        cum_case_prop = cumsum(df.confirmed_cases ./ df.popData2018)
-        death_prop = df.deaths ./ df.popData2018
-        recov_prop = df.recovered ./ df.popData2018
-        susc_prop = ((df.popData2018 - df.confirmed_cases - df.deaths - df.recovered) ./ df.popData2018)
+        case_prop = df.confirmed_cases ./ df.population
+        cum_case_prop = cumsum(df.confirmed_cases ./ df.population)
+        death_prop = df.deaths ./ df.population
+        recov_prop = df.recovered ./ df.population
+        susc_prop = ((df.population - df.confirmed_cases - df.deaths - df.recovered) ./ df.population)
 
         dates = Date.(string.(df.date), "mm/dd/yy") + Dates.Year("2000")
         t = dates - minimum(dates)
@@ -99,11 +101,11 @@ function import_data(drop_threshold = 100; download_data = false)
             death_prop = death_prop,
             recov_prop = recov_prop,
             susc_prop = susc_prop,
-            pop = df.popData2018)
+            pop = df.population)
         return res
     end
 
-    dat = @pipe (groupby(hopkins_ecdc, :Country_Region) |>
+    dat = @pipe (groupby(hopkins_wikidata, [:Province_State, :Country_Region]) |>
         map(add_SIR_time, _) |>
         DataFrame(_));
 
