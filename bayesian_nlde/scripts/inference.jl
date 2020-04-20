@@ -3,7 +3,7 @@ using DataFrames
 using Plots
 using Turing
 
-Turing.setadbackend(:forward_diff)
+Turing.setadbackend(:reversediff)
 
 # load data and format for inference
 dat = import_data(download_data = false)
@@ -17,10 +17,20 @@ sub_idx = [i for (i,x) in enumerate(grouped_sir_data) if size(x, 2) > 28]
 sub_grouped_sir_data = grouped_sir_data[sub_idx]
 sub_country_pops = country_pops[sub_idx]
 
+model = hierarchical_sir_model(grouped_sir = sub_grouped_sir_data,
+    m_countries = length(sub_grouped_sir_data),
+    country_pops = sub_country_pops)
+
+
+varinfo = Turing.VarInfo(hierarchical_sir_model)
+spl = Turing.SampleFromPrior()
+@code_warntype model.f(varinfo, spl, Turing.DefaultContext(), model)
+
+
 # infer paramters
 @time chains = sample(hierarchical_sir_model(grouped_sir = sub_grouped_sir_data,
     m_countries = length(sub_grouped_sir_data), country_pops = sub_country_pops),
-    NUTS(1000, 0.65), 5000; progress = true, verbose = true)
+    NUTS(100, 0.8), 500; progress = true, verbose = true)
 write(string(dirname(@__DIR__)) * "/data/chains/posterior_samples.jls", chains) 
 
 # plot distribution over trajectories
