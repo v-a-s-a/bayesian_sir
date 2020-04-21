@@ -2,7 +2,6 @@ module bayesian_nlde
 
     using DifferentialEquations
     using Turing
-    using Distributions
     using CSV
     using DataFrames
     using Dates

@@ -2,6 +2,8 @@ using bayesian_nlde
 using DataFrames
 using Plots
 using Turing
+using ReverseDiff
+using DiffEqSensitivity
 
 Turing.setadbackend(:reversediff)
 
@@ -32,6 +34,8 @@ spl = Turing.SampleFromPrior()
     m_countries = length(sub_grouped_sir_data), country_pops = sub_country_pops),
     NUTS(100, 0.8), 500; progress = true, verbose = true)
 write(string(dirname(@__DIR__)) * "/data/chains/posterior_samples.jls", chains) 
+
+#plotlyjs()
 
 # plot distribution over trajectories
 for i in sub_idx
