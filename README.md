@@ -16,7 +16,7 @@ Currently, the model is hierarchical SIR model, with infection and recovery rate
 
 The following show distributions of disease trajectories over time. Thick lines represent the expected posterior distribution of disease trajectory.
 
-Data/fit from 03.04.2020:
+Data/fit from 20.04.2020:
 
 ![US](bayesian_nlde/data/plots/US.svg)
 ![Germany](bayesian_nlde/data/plots/Germany.svg)
