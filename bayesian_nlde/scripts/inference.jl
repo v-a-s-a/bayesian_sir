@@ -2,10 +2,10 @@ using bayesian_nlde
 using DataFrames
 using Plots
 using Turing
-using ReverseDiff
-using DiffEqSensitivity
+# using ReverseDiff
+# using DiffEqSensitivity
 
-Turing.setadbackend(:reversediff)
+Turing.setadbackend(:forwarddiff)
 
 # load data and format for inference
 dat = import_data(download_data = false)
@@ -16,6 +16,7 @@ country_names = [df.Country_Region[1] for df in grouped_dat]
 
 # look at countries with more than a months worth of reporting
 sub_idx = [i for (i,x) in enumerate(grouped_sir_data) if size(x, 2) > 28]
+sub_idx = sub_idx[1:10]
 sub_grouped_sir_data = grouped_sir_data[sub_idx]
 sub_country_pops = country_pops[sub_idx]
 

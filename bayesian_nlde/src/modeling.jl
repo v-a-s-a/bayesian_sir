@@ -41,7 +41,7 @@ sir_ode = @ode_def SIRModel begin
         init = [(country_pops[j] - 100.0) / country_pops[j], 100.0 / country_pops[j], 0.0]
         sir_prob = ODEProblem(sir_ode, init, tspan)
 
-        sol = concrete_solve(sir_prob, Tsit5(), init, [β[j], γ[j]]; saveat = 1:longest)[:]
+        sol = concrete_solve(sir_prob, Tsit5(), init, [β[j], γ[j]]; saveat = 1:longest)
 
         if size(sol, 2) < timepoints[j]
             @logpdf() = zero(1) * sum(grouped_sir[j]) + -Inf
